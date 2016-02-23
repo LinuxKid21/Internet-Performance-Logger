@@ -1,14 +1,19 @@
 # depslib dependency file v1.0
-1456258331 source:/user_data/CodeProjects/network_stats/main.cpp
+1456265651 source:/user_data/CodeProjects/network_stats/main.cpp
 	<iostream>
 	<vector>
 	<fstream>
 	<array>
 	<algorithm>
+	<iomanip>
+	"Enumerators.hpp"
 	"NetworkData.hpp"
 	"HelperFunctions.hpp"
 
-1456257779 /user_data/CodeProjects/network_stats/NetworkData.hpp
+1456265729 /user_data/CodeProjects/network_stats/NetworkData.hpp
+	"Enumerators.hpp"
 
-1456259965 /user_data/CodeProjects/network_stats/HelperFunctions.hpp
+1456263594 /user_data/CodeProjects/network_stats/HelperFunctions.hpp
+
+1456265681 /user_data/CodeProjects/network_stats/Enumerators.hpp
 

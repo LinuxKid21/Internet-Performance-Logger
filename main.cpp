@@ -7,6 +7,7 @@
 
 using namespace std;
 
+#include "Enumerators.hpp"
 #include "NetworkData.hpp"
 #include "HelperFunctions.hpp"
 
@@ -47,6 +48,12 @@ void PrintStats(std::string name, float average, std::vector<int> &Modes, std::v
 }
 
 
+struct input {
+    std::string command;
+    int starting_year = -5000;
+    int ending_year = 5000;
+};
+
 
 int main()
 {
@@ -54,9 +61,11 @@ int main()
 
     std::string file_name = "networklog.txt";
 
+    // if "networklog.txt" does not exist
+    // GetData will return true and prompt
+    // for an input file name until it
+    // recieves something valid
     while(!GetData(data, file_name)){}
-
-
 
 
 
