@@ -1,15 +1,13 @@
-#include <iostream>
-#include <vector>
-#include <fstream>
-#include <array>
-#include <algorithm>
-#include <iomanip>
-
-using namespace std;
-
+#include "ParsedInput.hpp"
 #include "Enumerators.hpp"
 #include "NetworkData.hpp"
 #include "HelperFunctions.hpp"
+
+#include <iostream>
+#include <vector>
+#include <array>
+#include <iomanip>
+
 
 
 
@@ -46,13 +44,6 @@ void PrintStats(std::string name, float average, std::vector<int> &Modes, std::v
                     << "\n";
     }
 }
-
-
-struct input {
-    std::string command;
-    int starting_year = -5000;
-    int ending_year = 5000;
-};
 
 
 int main()
@@ -106,36 +97,36 @@ int main()
 
 
     char command[128];
-    while(cin.getline(command,128)){
-        string str = command;
+    while(std::cin.getline(command,128)){
+        ParsedInput input = ParseInput(command);
 
-        if(str == "download" || str == "downloads"){
+        if(input.command == "download" || input.command == "downloads"){
             PrintStats("Download", AverageDownload, ModesDownload, UniqueValuesDownload, FiveNumberSummaryDownload);
         }
 
-        else if(str == "upload" || str == "uploads"){
+        else if(input.command == "upload" || input.command == "uploads"){
             PrintStats("Upload", AverageUpload, ModesUpload, UniqueValuesUpload, FiveNumberSummaryUpload);
         }
 
-        else if(str == "ping" || str == "pings"){
+        else if(input.command == "ping" || input.command == "pings"){
             PrintStats("Ping", AveragePing, ModesPing, UniqueValuesPing, FiveNumberSummaryPing);
         }
 
-        else if(str == "time"){
+        else if(input.command == "time"){
             std::cout << "log up for: " << data.size() << " hours = " << int(data.size()/24) << " days.\n";
             //! add total time(including down time) here
         }
 
-        else if(str == "errors" || str == "warnings"){
+        else if(input.command == "errors" || input.command == "warnings"){
             std::cout << "could not find data for " << could_not_find_errors+parsing_errors << " hours.\n";
         }
 
-        else if(str == "quit" || str == "exit"){
+        else if(input.command == "quit" || input.command == "exit"){
             return 0;
         }
 
         else{
-            if(str != "help")
+            if(input.command != "help")
                 std::cout << "invalid command, help printed below\n";
             std::cout << "commands are:\n";
             std::cout << "download,upload,ping,time,errors, and help\n";

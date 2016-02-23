@@ -1,5 +1,6 @@
 #ifndef ENUMERATORS
 #define ENUMERATORS
+#include <iostream>
 
 // would have been  if(day == Mon){return "Mon";}
 // instead of being RETURN_IF_ENUM_SET(Mon);
@@ -18,7 +19,7 @@ enum MONTHNAMES{
 };
 
 
-DAYNAMES find_day(string date_from_line){
+DAYNAMES find_day(std::string date_from_line){
     RETURN_IF_ENUM_FOUND(date_from_line, Mon);
     RETURN_IF_ENUM_FOUND(date_from_line, Tue);
     RETURN_IF_ENUM_FOUND(date_from_line, Wed);
@@ -28,7 +29,7 @@ DAYNAMES find_day(string date_from_line){
     RETURN_IF_ENUM_FOUND(date_from_line, Sun);
     return UnkD;
 }
-string day_to_string(DAYNAMES day){
+std::string day_to_string(DAYNAMES day){
     RETURN_IF_ENUM_SET(day, Mon);
     RETURN_IF_ENUM_SET(day, Tue);
     RETURN_IF_ENUM_SET(day, Wed);
@@ -40,7 +41,7 @@ string day_to_string(DAYNAMES day){
 }
 
 
-MONTHNAMES find_month(string date_from_line){
+MONTHNAMES find_month(std::string date_from_line){
     RETURN_IF_ENUM_FOUND(date_from_line, Jan);
     RETURN_IF_ENUM_FOUND(date_from_line, Feb);
     RETURN_IF_ENUM_FOUND(date_from_line, Mar);
@@ -55,7 +56,7 @@ MONTHNAMES find_month(string date_from_line){
     RETURN_IF_ENUM_FOUND(date_from_line, Dec);
     return UnkM;
 }
-string month_to_string(MONTHNAMES month){
+std::string month_to_string(MONTHNAMES month){
     RETURN_IF_ENUM_SET(month, Jan);
     RETURN_IF_ENUM_SET(month, Feb);
     RETURN_IF_ENUM_SET(month, Mar);
