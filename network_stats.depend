@@ -1,0 +1,14 @@
+# depslib dependency file v1.0
+1456258331 source:/user_data/CodeProjects/network_stats/main.cpp
+	<iostream>
+	<vector>
+	<fstream>
+	<array>
+	<algorithm>
+	"NetworkData.hpp"
+	"HelperFunctions.hpp"
+
+1456257779 /user_data/CodeProjects/network_stats/NetworkData.hpp
+
+1456259965 /user_data/CodeProjects/network_stats/HelperFunctions.hpp
+
