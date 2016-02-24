@@ -1,12 +1,4 @@
-This program makes use of a program called crontab.
-Install crontab then call crontab -e.
-If you would like to use a different editor than the default then type in export VISUAL=program_name_here before typing in the last line
-Then place the line below into the file:
-0 * * * * path_to/get_ping.sh
-Then run sudo crond.
+This data analisis program is completely without data!
+get_ping.sh appends internet statistics(download speed, upload speed, ping) to networklog.txt
 
-This will ping every hour and add the data to networklog.txt
-
-for more information on crontab see http://www.adminschoice.com/crontab-quick-reference
-
-You could also use another program and just make it excecute the get_ping.sh file.
+I used crontab. For more information on crontab see http://www.adminschoice.com/crontab-quick-reference
