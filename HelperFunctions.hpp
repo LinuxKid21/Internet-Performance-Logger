@@ -1,27 +1,70 @@
 #include <array>
 #include <algorithm>
+bool DoesDataFitInParsedInput(NetworkData d, ParsedInput &input){
+    if(d.year < input.ending_year && d.year > input.starting_year) {
+        return true;
+    }
+    else if(d.year == input.starting_year && d.year == input.ending_year) {
+        if(d.month > input.starting_month && d.month < input.ending_month) {
+            return true;
+        }else if(d.month == input.starting_month && d.month == input.ending_month) {
+            return d.day_of_month >= input.starting_day_of_month && d.day_of_month <= input.ending_day_of_month;
+        }
+        else if(d.month == input.starting_month) {
+            return d.day_of_month >= input.starting_day_of_month;
+        }
+        else if(d.month == input.ending_month) {
+            return d.day_of_month <= input.ending_day_of_month;
+        }
+        return false;
+    }
+
+
+    else if(d.year == input.starting_year) {
+        if(d.month > input.starting_month) {
+            return true;
+        }else if(d.month == input.starting_month) {
+            return d.day_of_month >= input.starting_day_of_month;
+        }
+        return false;
+    }
+
+
+    else if(d.year == input.ending_year) {
+        if(d.month < input.ending_month) {
+            return true;
+        }else if(d.month == input.ending_month) {
+            return d.day_of_month <= input.starting_day_of_month;
+        }
+        return false;
+    }
+    return false;
+}
+
 
 //!----------------------------------------------------------------------------
 //-------------------averaging functions-------------------
 //!----------------------------------------------------------------------------
-float GetAverageDownload(const std::vector<NetworkData> &data){
+float GetAverageDownload(const std::vector<NetworkData> &data, ParsedInput &input){
     float AverageDownload = 0;
     int Count = 0;
     for(unsigned int i = 0;i < data.size();i++){
-        if(data[i].Download != -1 && data[i].Download != -2){
+        if(data[i].Download != -1 && data[i].Download != -2 &&
+           DoesDataFitInParsedInput(data[i], input)){
             AverageDownload += data[i].Download;
             Count++;
         }
     }
-    //! this will of course crash if any of these Counts are zero, but that should never be the case.
+    if(Count == 0) return -1;
     return AverageDownload/Count;
 }
 
-float GetAverageUpload(const std::vector<NetworkData> &data){
+float GetAverageUpload(const std::vector<NetworkData> &data, ParsedInput &input){
     float AverageUpload = 0;
     int Count = 0;
     for(unsigned int i = 0;i < data.size();i++){
-        if(data[i].Upload != -1 && data[i].Upload != -2){
+        if(data[i].Upload != -1 && data[i].Upload != -2 &&
+           DoesDataFitInParsedInput(data[i], input)){
             AverageUpload += data[i].Upload;
             Count++;
         }
@@ -31,11 +74,12 @@ float GetAverageUpload(const std::vector<NetworkData> &data){
 }
 
 
-float GetAveragePing(const std::vector<NetworkData> &data){
+float GetAveragePing(const std::vector<NetworkData> &data, ParsedInput &input){
     float AveragePing = 0;
     int Count = 0;
     for(unsigned int i = 0;i < data.size();i++){
-        if(data[i].Ping != -1 && data[i].Ping != -2){
+        if(data[i].Ping != -1 && data[i].Ping != -2 &&
+           DoesDataFitInParsedInput(data[i], input)){
             AveragePing += data[i].Ping;
             Count++;
         }
@@ -104,9 +148,10 @@ void _HelperModes(std::vector<int> &UniqueValues, std::vector<int> &Modes, int i
     }
 }
 
-void GetModeDownload(std::vector<int> &UniqueValuesDownload, std::vector<int> &ModesDownload,const std::vector<NetworkData> &data){
+void GetModeDownload(std::vector<int> &UniqueValuesDownload, std::vector<int> &ModesDownload,const std::vector<NetworkData> &data, ParsedInput &input){
     for(unsigned int i = 0;i < data.size();i++){
-        if(data[i].Download != -1 && data[i].Download != -2){
+        if(data[i].Download != -1 && data[i].Download != -2 &&
+           DoesDataFitInParsedInput(data[i], input)){
             _HelperModes(UniqueValuesDownload, ModesDownload, i, int(data[i].Download+.5));
         }
     }
@@ -115,9 +160,10 @@ void GetModeDownload(std::vector<int> &UniqueValuesDownload, std::vector<int> &M
 
 }
 
-void GetModeUpload(std::vector<int> &UniqueValuesUpload, std::vector<int> &ModesUpload,const std::vector<NetworkData> &data){
+void GetModeUpload(std::vector<int> &UniqueValuesUpload, std::vector<int> &ModesUpload,const std::vector<NetworkData> &data, ParsedInput &input){
     for(unsigned int i = 0;i < data.size();i++){
-        if(data[i].Upload != -1 && data[i].Upload != -2){
+        if(data[i].Upload != -1 && data[i].Upload != -2 &&
+           DoesDataFitInParsedInput(data[i], input)){
             _HelperModes(UniqueValuesUpload, ModesUpload, i, int(data[i].Upload*10.f));
         }
     }
@@ -127,9 +173,10 @@ void GetModeUpload(std::vector<int> &UniqueValuesUpload, std::vector<int> &Modes
 }
 
 
-void GetModePing(std::vector<int> &UniqueValuesPing, std::vector<int> &ModesPing,const std::vector<NetworkData> &data){
+void GetModePing(std::vector<int> &UniqueValuesPing, std::vector<int> &ModesPing,const std::vector<NetworkData> &data, ParsedInput &input){
     for(unsigned int i = 0;i < data.size();i++){
-        if(data[i].Ping != -1 && data[i].Ping != -2){
+        if(data[i].Ping != -1 && data[i].Ping != -2 &&
+           DoesDataFitInParsedInput(data[i], input)){
             int download_int = 0;
             if(data[i].Ping <= 20)
                 download_int = 20;
@@ -151,11 +198,12 @@ void GetModePing(std::vector<int> &UniqueValuesPing, std::vector<int> &ModesPing
 //-------------------five number summary-------------------
 //!----------------------------------------------------------------------------
 
-std::array<float,5> GetFiveNumberSummaryDownload(const std::vector<NetworkData> &data){
+std::array<float,5> GetFiveNumberSummaryDownload(const std::vector<NetworkData> &data, ParsedInput &input){
     std::array<float,5> FiveNumber;
     std::vector<float> Downloads;
     for(unsigned int i = 0;i < data.size();i++){
-        if(data[i].Download != -1 && data[i].Download != -2)
+        if(data[i].Download != -1 && data[i].Download != -2 &&
+           DoesDataFitInParsedInput(data[i], input))
             Downloads.push_back(data[i].Download);
     }
     std::sort(Downloads.begin(),Downloads.end());
@@ -169,11 +217,12 @@ std::array<float,5> GetFiveNumberSummaryDownload(const std::vector<NetworkData> 
     return FiveNumber;
 }
 
-std::array<float,5> GetFiveNumberSummaryUpload(const std::vector<NetworkData> &data){
+std::array<float,5> GetFiveNumberSummaryUpload(const std::vector<NetworkData> &data, ParsedInput &input){
     std::array<float,5> FiveNumber;
     std::vector<float> Uploads;
     for(unsigned int i = 0;i < data.size();i++){
-        if(data[i].Upload != -1 && data[i].Upload != -2)
+        if(data[i].Upload != -1 && data[i].Upload != -2 &&
+           DoesDataFitInParsedInput(data[i], input))
             Uploads.push_back(data[i].Upload);
     }
     std::sort(Uploads.begin(),Uploads.end());
@@ -187,11 +236,12 @@ std::array<float,5> GetFiveNumberSummaryUpload(const std::vector<NetworkData> &d
     return FiveNumber;
 }
 
-std::array<float,5> GetFiveNumberSummaryPing(const std::vector<NetworkData> &data){
+std::array<float,5> GetFiveNumberSummaryPing(const std::vector<NetworkData> &data, ParsedInput &input){
     std::array<float,5> FiveNumber;
     std::vector<float> Pings;
     for(unsigned int i = 0;i < data.size();i++){
-        if(data[i].Ping != -1 && data[i].Ping != -2)
+        if(data[i].Ping != -1 && data[i].Ping != -2 &&
+           DoesDataFitInParsedInput(data[i], input))
             Pings.push_back(data[i].Ping);
     }
     std::sort(Pings.begin(),Pings.end());

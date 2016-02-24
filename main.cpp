@@ -61,10 +61,6 @@ int main()
 
 
 
-    float AverageDownload = GetAverageDownload(data);
-    float AverageUpload = GetAverageUpload(data);
-    float AveragePing = GetAveragePing(data);
-
 
 
     int could_not_find_errors = 0;
@@ -73,43 +69,48 @@ int main()
 
 
 
-    std::vector<int> UniqueValuesDownload;
-    std::vector<int> ModesDownload;
-    GetModeDownload(UniqueValuesDownload, ModesDownload,data);
-
-    std::vector<int> _UniqueValuesUpload;
-    std::vector<int> ModesUpload;
-    GetModeUpload(_UniqueValuesUpload, ModesUpload,data);
-    std::vector<float> UniqueValuesUpload;
-    for(unsigned int i = 0;i < _UniqueValuesUpload.size(); i++) UniqueValuesUpload.push_back(_UniqueValuesUpload[i]/10.f);
-    _UniqueValuesUpload.clear();
-
-    std::vector<int> UniqueValuesPing;
-    std::vector<int> ModesPing;
-    GetModePing(UniqueValuesPing, ModesPing,data);
-
-
-
-
-    std::array<float,5> FiveNumberSummaryDownload = GetFiveNumberSummaryDownload(data);
-    std::array<float,5> FiveNumberSummaryUpload = GetFiveNumberSummaryUpload(data);
-    std::array<float,5> FiveNumberSummaryPing = GetFiveNumberSummaryPing(data);
-
-
     char command[128];
     while(std::cin.getline(command,128)){
         ParsedInput input = ParseInput(command);
 
+
+
+        if(input.error != "") {
+            std::cout << "input error: " << input.error << "\n";
+            continue;
+        }
+
         if(input.command == "download" || input.command == "downloads"){
-            PrintStats("Download", AverageDownload, ModesDownload, UniqueValuesDownload, FiveNumberSummaryDownload);
+            std::vector<int> UniqueValuesDownload;
+            std::vector<int> ModesDownload;
+            GetModeDownload(UniqueValuesDownload, ModesDownload,data, input);
+            std::array<float,5> FiveNumberSummaryDownload = GetFiveNumberSummaryDownload(data, input);
+
+
+            PrintStats("Download", GetAverageDownload(data, input), ModesDownload, UniqueValuesDownload, FiveNumberSummaryDownload);
         }
 
         else if(input.command == "upload" || input.command == "uploads"){
-            PrintStats("Upload", AverageUpload, ModesUpload, UniqueValuesUpload, FiveNumberSummaryUpload);
+            std::vector<int> _UniqueValuesUpload;
+            std::vector<int> ModesUpload;
+            GetModeUpload(_UniqueValuesUpload, ModesUpload,data, input);
+            std::vector<float> UniqueValuesUpload;
+            for(unsigned int i = 0;i < _UniqueValuesUpload.size(); i++) UniqueValuesUpload.push_back(_UniqueValuesUpload[i]/10.f);
+            _UniqueValuesUpload.clear();
+            std::array<float,5> FiveNumberSummaryUpload = GetFiveNumberSummaryUpload(data, input);
+
+
+            PrintStats("Upload", GetAverageUpload(data, input), ModesUpload, UniqueValuesUpload, FiveNumberSummaryUpload);
         }
 
         else if(input.command == "ping" || input.command == "pings"){
-            PrintStats("Ping", AveragePing, ModesPing, UniqueValuesPing, FiveNumberSummaryPing);
+            std::vector<int> UniqueValuesPing;
+            std::vector<int> ModesPing;
+            GetModePing(UniqueValuesPing, ModesPing,data, input);
+            std::array<float,5> FiveNumberSummaryPing = GetFiveNumberSummaryPing(data, input);
+
+
+            PrintStats("Ping", GetAveragePing(data, input), ModesPing, UniqueValuesPing, FiveNumberSummaryPing);
         }
 
         else if(input.command == "time"){
