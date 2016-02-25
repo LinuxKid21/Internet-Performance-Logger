@@ -1,1 +1,8 @@
-The bin folder contains setup instructions
+The speedtest-cli program is by Matt Martz. Open speedtest-cli with a text editor for more information.
+Everything else in this folder and all sub folders is by Levi Stoddard.
+
+This program relies on a program called PlPlot which can be found here:
+	http://plplot.sourceforge.net/downloads.php
+
+
+This has never been tested on windows, but there shouldn't be any problems with it except that mayber the -lpthread option might have to be removed from CodeBlocks build options

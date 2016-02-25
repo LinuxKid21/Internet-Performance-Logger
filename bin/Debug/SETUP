@@ -1,4 +1,0 @@
-This data analisis program is completely without data!
-get_ping.sh appends internet statistics(download speed, upload speed, ping) to networklog.txt
-
-I used crontab. For more information on crontab see http://www.adminschoice.com/crontab-quick-reference

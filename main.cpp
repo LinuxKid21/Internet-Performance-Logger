@@ -7,6 +7,15 @@
 #include <vector>
 #include <array>
 #include <iomanip>
+#include <thread>
+#include <chrono>
+#include <stdlib.h>
+
+// MathGL uses a gnu-only feature which has been implemented in c++11
+// that do the exact same thing, so this hack should work, but if there
+// are bugs then
+#define typeof decltype
+#include <mgl2/mgl.h>
 
 
 
@@ -45,11 +54,18 @@ void PrintStats(std::string name, float average, std::vector<int> &Modes, std::v
     }
 }
 
+void LogPeriodically(int interval) {
 
-int main()
-{
+    while(true) {
+        std::cout << "getting another set of data...\n";
+        std::cout << "for now this must be stopped by hitting ctrl-C...\n";
+        system("./get_ping.sh &");
+        std::this_thread::sleep_for(std::chrono::minutes(interval));
+    }
+}
+
+void Reader() {
     std::vector<NetworkData> data;
-
     std::string file_name = "networklog.txt";
 
     // if "networklog.txt" does not exist
@@ -57,7 +73,6 @@ int main()
     // for an input file name until it
     // recieves something valid
     while(!GetData(data, file_name)){}
-
 
 
 
@@ -123,7 +138,7 @@ int main()
         }
 
         else if(input.command == "quit" || input.command == "exit"){
-            return 0;
+            exit(0);
         }
 
         else{
@@ -134,6 +149,43 @@ int main()
             std::cout << "to quit simply enter quit or exit\n";
         }
     }
+}
+
+
+int main(int argc, char **argv)
+{
+    int interval = 60;
+    bool reader_or_logger = true;
+    for(int i = 1;i < argc; i++) {
+        std::string arg = argv[i];
+        if(arg == "-h" || arg == "--help") {
+            std::cout << "--help     | " << "displays this help\n";
+            std::cout << "--interval | " << "default is 60(1 hour). sets how often to log the data.\n";
+            std::cout << "--logger   | " << "logs data, and has no user interaction except quit.\n";
+            std::cout << "--reader   | " << "does not log data, but allows commands like \"ping\".\n";
+            return 0;
+        }
+        else if(arg == "--interval" || arg == "-i") {
+            interval = -1;
+        }
+        else if(interval == -1) {
+            interval = std::stoi(arg);
+        }
+        else if(arg == "--logger" || arg == "-l") {
+            reader_or_logger = false;
+        }
+        else if(arg == "--reader" || arg == "-r") {
+            reader_or_logger = true;
+        } else {
+            std::cout << "unkown command \"" << arg << "\"\n";
+            return 0;
+        }
+    }
+    if(!reader_or_logger)
+        LogPeriodically(interval);
+    else
+        Reader();
+
 
     return 0;
 }

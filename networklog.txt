@@ -23,3 +23,53 @@ Tue Feb 23 17:07:09 PST 2016
 Ping: 25.783 ms
 Download: 11.78 Mbits/s
 Upload: 0.84 Mbits/s
+----------------
+Tue Feb 23 22:54:22 PST 2016
+Ping: 27.431 ms
+Download: 9.27 Mbits/s
+Upload: 0.88 Mbits/s
+----------------
+Tue Feb 23 23:18:17 PST 2016
+Ping: 25.538 ms
+Download: 11.80 Mbits/s
+Upload: 0.99 Mbits/s
+----------------
+Wed Feb 24 00:18:17 PST 2016
+Ping: 26.772 ms
+Download: 11.79 Mbits/s
+Upload: 1.00 Mbits/s
+----------------
+Wed Feb 24 01:18:17 PST 2016
+Ping: 26.693 ms
+Download: 11.88 Mbits/s
+Upload: 0.75 Mbits/s
+----------------
+Wed Feb 24 02:18:17 PST 2016
+Ping: 26.891 ms
+Download: 11.80 Mbits/s
+Upload: 0.89 Mbits/s
+----------------
+Wed Feb 24 03:18:17 PST 2016
+Ping: 26.906 ms
+Download: 11.80 Mbits/s
+Upload: 1.00 Mbits/s
+----------------
+Wed Feb 24 04:18:17 PST 2016
+Ping: 27.018 ms
+Download: 11.81 Mbits/s
+Upload: 0.86 Mbits/s
+----------------
+Wed Feb 24 05:18:17 PST 2016
+Ping: 26.439 ms
+Download: 11.74 Mbits/s
+Upload: 1.00 Mbits/s
+----------------
+Wed Feb 24 06:18:17 PST 2016
+Ping: 28.896 ms
+Download: 11.81 Mbits/s
+Upload: 1.00 Mbits/s
+----------------
+Wed Feb 24 07:18:17 PST 2016
+Ping: 26.242 ms
+Download: 11.80 Mbits/s
+Upload: 0.87 Mbits/s

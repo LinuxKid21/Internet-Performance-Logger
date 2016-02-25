@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1456274942 source:/user_data/CodeProjects/network_stats/main.cpp
+1456361068 source:/user_data/CodeProjects/network_stats/main.cpp
 	"ParsedInput.hpp"
 	"Enumerators.hpp"
 	"NetworkData.hpp"
@@ -8,6 +8,10 @@
 	<vector>
 	<array>
 	<iomanip>
+	<thread>
+	<chrono>
+	<stdlib.h>
+	<mgl2/mgl.h>
 
 1456266337 /user_data/CodeProjects/network_stats/NetworkData.hpp
 	"Enumerators.hpp"
