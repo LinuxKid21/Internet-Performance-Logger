@@ -11,11 +11,9 @@
 #include <chrono>
 #include <stdlib.h>
 
-// MathGL uses a gnu-only feature which has been implemented in c++11
-// that do the exact same thing, so this hack should work, but if there
-// are bugs then
-#define typeof decltype
-#include <mgl2/mgl.h>
+
+#include <plplot/plplot.h>
+#include <plplot/plstream.h>
 
 
 
@@ -65,6 +63,29 @@ void LogPeriodically(int interval) {
 }
 
 void Reader() {
+    plstream *pls = new plstream();;
+    pls->init();
+
+
+    // Make a simple function, y(x) = x^2
+    int N = 100;
+    double xmax = 5.0;
+    double dx = xmax/(double)N;
+    double x[N], y[N];
+    x[0] = -xmax/2.0; y[0] = x[0]*x[0];
+    for(int i=1; i<N; i++){
+        x[i] = x[i-1] + dx;
+        y[i] = x[i]*x[i];
+    }
+
+    pls->env(x[0],x[N-1],y[0],y[N-1],1, 0);
+    pls->line(N,x,y);
+
+    delete pls;
+
+
+
+
     std::vector<NetworkData> data;
     std::string file_name = "networklog.txt";
 
