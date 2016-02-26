@@ -9,12 +9,6 @@
 #include <iomanip>
 #include <thread>
 #include <chrono>
-#include <stdlib.h>
-
-
-#include <plplot/plplot.h>
-#include <plplot/plstream.h>
-
 
 
 
