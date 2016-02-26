@@ -16,10 +16,6 @@ void GetErrors(int &could_not_find_errors, int &parsing_errors,const std::vector
 
 //-------------------mode functions-------------------
 Mode GetMode(const std::vector<NetworkData> &data, ParsedInput &input, float multiplier, DATA d);
-//void GetModeDownload(std::vector<float> &UniqueValuesDownload, std::vector<float> &ModesDownload,const std::vector<NetworkData> &data, ParsedInput &input);
-//void GetModeUpload(std::vector<float> &UniqueValuesUpload, std::vector<float> &ModesUpload,const std::vector<NetworkData> &data, ParsedInput &input);
-//void GetModePing(std::vector<float> &UniqueValuesPing, std::vector<float> &ModesPing,const std::vector<NetworkData> &data, ParsedInput &input);
-
 
 
 //-------------------five number summary-------------------
