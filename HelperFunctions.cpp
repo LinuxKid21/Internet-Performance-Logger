@@ -78,34 +78,13 @@ static void DoubleSort(std::vector<T> &SortFromAndTo, std::vector<T> &SortTo){
 //!----------------------------------------------------------------------------
 //-------------------averaging functions-------------------
 //!----------------------------------------------------------------------------
-
-
-float GetAverageDownload(const std::vector<NetworkData> &data, ParsedInput &input){
-    float AverageDownload = 0;
+float GetAverage(const std::vector<NetworkData> &data, ParsedInput &input, DATA d) {
+    float Average = 0;
     int Count = 0;
-    IterateThroughData(data, input, [&](NetworkData _data){AverageDownload += _data.Download; Count++;});
+    IterateThroughData(data, input, [&](NetworkData _data){Average += _data.Get(d); Count++;});
     if(Count == 0) return -1;
-    return AverageDownload/Count;
+    return Average/Count;
 }
-
-float GetAverageUpload(const std::vector<NetworkData> &data, ParsedInput &input){
-    float AverageUpload = 0;
-    int Count = 0;
-    IterateThroughData(data, input, [&](NetworkData _data){AverageUpload += _data.Upload; Count++;});
-    if(Count == 0) return -1;
-    return AverageUpload/Count;
-}
-
-
-float GetAveragePing(const std::vector<NetworkData> &data, ParsedInput &input){
-    float AveragePing = 0;
-    int Count = 0;
-    IterateThroughData(data, input, [&](NetworkData _data){AveragePing += _data.Ping; Count++;});
-    if(Count == 0) return -1;
-    return AveragePing/Count;
-}
-
-#undef GetAverage
 
 
 //!----------------------------------------------------------------------------
@@ -128,71 +107,31 @@ void GetErrors(int &could_not_find_errors, int &parsing_errors,const std::vector
 //!----------------------------------------------------------------------------
 //-------------------mode functions-------------------
 //!----------------------------------------------------------------------------
-/* _HelperModes takes in two empty vectors, an index, and a number. */
-/* _HelperModes checks to see if num is inside UniqueValues, and if
-   not adds it and initalizes Modes at that index with 1. If it already
-   exists in UniqueValues, then increment Modes at that index. */
-void _HelperModes(std::vector<int> &UniqueValues, std::vector<int> &Modes, int i, int num) {
-
-    if(UniqueValues.empty()){
-        UniqueValues.push_back(num);
-        Modes.push_back(1);
-    }else{
-        bool new_mode = true;
-        for(unsigned int i = 0;i < UniqueValues.size();i++){
-            if(num == UniqueValues[i]){
-                new_mode = false;
-                Modes[i]++;
+Mode GetMode(const std::vector<NetworkData> &data, ParsedInput &input, float multiplier, DATA d) {
+    std::vector<float> UniqueValues;
+    std::vector<float> Modes;
+    IterateThroughData(data, input,
+        [&](NetworkData _data){
+            float num = int(_data.Get(d)*multiplier+.5)/multiplier;
+            if(UniqueValues.empty()){
+                UniqueValues.push_back(num);
+                Modes.push_back(1);
+            }else{
+                bool new_mode = true;
+                for(unsigned int i = 0;i < UniqueValues.size();i++){
+                    if(num == UniqueValues[i]){
+                        new_mode = false;
+                        Modes[i]++;
+                    }
+                }
+                if(new_mode){
+                    UniqueValues.push_back(num);
+                    Modes.push_back(1);
+                }
             }
-        }
-        if(new_mode){
-            UniqueValues.push_back(num);
-            Modes.push_back(1);
-        }
-    }
-}
-
-
-void GetModeDownload(std::vector<int> &UniqueValuesDownload, std::vector<int> &ModesDownload,const std::vector<NetworkData> &data, ParsedInput &input){
-    for(unsigned int i = 0;i < data.size();i++){
-        if(IsDataValid(data[i]) && DoesDataFitInParsedInput(data[i], input)){
-            _HelperModes(UniqueValuesDownload, ModesDownload, i, int(data[i].Download+.5));
-        }
-    }
-    // we get our data from _HelperModes in scrambled order so fix that!
-    DoubleSort(UniqueValuesDownload,ModesDownload);
-
-}
-
-void GetModeUpload(std::vector<int> &UniqueValuesUpload, std::vector<int> &ModesUpload,const std::vector<NetworkData> &data, ParsedInput &input){
-    for(unsigned int i = 0;i < data.size();i++){
-        if(IsDataValid(data[i]) && DoesDataFitInParsedInput(data[i], input)){
-            _HelperModes(UniqueValuesUpload, ModesUpload, i, int(data[i].Upload*10.f));
-        }
-    }
-    // we get our data from _HelperModes in scrambled order so fix that!
-    DoubleSort(UniqueValuesUpload,ModesUpload);
-
-}
-
-
-void GetModePing(std::vector<int> &UniqueValuesPing, std::vector<int> &ModesPing,const std::vector<NetworkData> &data, ParsedInput &input){
-    for(unsigned int i = 0;i < data.size();i++){
-        if(IsDataValid(data[i]) && DoesDataFitInParsedInput(data[i], input)){
-            int download_int = 0;
-            if(data[i].Ping <= 20)
-                download_int = 20;
-            else if(data[i].Ping <= 30)
-                download_int = 30;
-            else
-                download_int = 40;
-
-            _HelperModes(UniqueValuesPing, ModesPing, i, download_int);
-        }
-    }
-    // we get our data from _HelperModes in scrambled order so fix that!
-    DoubleSort(UniqueValuesPing,ModesPing);
-
+       });
+    DoubleSort(UniqueValues,Modes);
+    return Mode(UniqueValues, Modes);
 }
 
 
@@ -201,7 +140,9 @@ void GetModePing(std::vector<int> &UniqueValuesPing, std::vector<int> &ModesPing
 //-------------------five number summary-------------------
 //!----------------------------------------------------------------------------
 
-static std::array<float,5> GetFiveNumberSummery(std::vector<float> &Speeds) {
+std::array<float,5> GetFiveNumberSummary(const std::vector<NetworkData> &data, ParsedInput &input, DATA d) {
+    std::vector<float> Speeds;
+    IterateThroughData(data, input, [&](NetworkData data){Speeds.push_back(data.Get(d));});
     std::array<float,5> FiveNumber;
     std::sort(Speeds.begin(),Speeds.end());
     if(Speeds.size() >= 5) {
@@ -217,22 +158,4 @@ static std::array<float,5> GetFiveNumberSummery(std::vector<float> &Speeds) {
         }
     }
     return FiveNumber;
-}
-
-std::array<float,5> GetFiveNumberSummaryDownload(const std::vector<NetworkData> &data, ParsedInput &input){
-    std::vector<float> Downloads;
-    IterateThroughData(data, input, [&](NetworkData data){Downloads.push_back(data.Download);});
-    return GetFiveNumberSummery(Downloads);
-}
-
-std::array<float,5> GetFiveNumberSummaryUpload(const std::vector<NetworkData> &data, ParsedInput &input){
-    std::vector<float> Uploads;
-    IterateThroughData(data, input, [&](NetworkData data){Uploads.push_back(data.Upload);});
-    return GetFiveNumberSummery(Uploads);
-}
-
-std::array<float,5> GetFiveNumberSummaryPing(const std::vector<NetworkData> &data, ParsedInput &input){
-    std::vector<float> Pings;
-    IterateThroughData(data, input, [&](NetworkData data){Pings.push_back(data.Ping);});
-    return GetFiveNumberSummery(Pings);
 }

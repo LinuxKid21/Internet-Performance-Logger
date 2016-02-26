@@ -20,16 +20,17 @@
 
 
 
-// we need this for both ints and floats
-template <class T>
-void PrintStats(std::string name, float average, std::vector<int> &Modes, std::vector<T> &UniqueValues, std::array<float,5> &FiveNumberSummary) {
+void PrintStats(std::string name, std::vector<NetworkData> &data, ParsedInput &input, float mode_mult, DATA d) {
+    float average = GetAverage(data, input, d);
+    Mode mode = GetMode(data, input, mode_mult, d);
+    std::array<float,5> fiveNumberSummary = GetFiveNumberSummary(data, input, d);
     float total_total = 0;
-    for(unsigned int j = 0;j < Modes.size();j++){
-        total_total+= Modes[j];
+    for(unsigned int j = 0;j < mode.Values.size();j++){
+        total_total+= mode.Values[j];
     }
     std::cout << "Average " << name << " Speed: " << average << "\n\n";
-    std::cout << "Five number summery: " << FiveNumberSummary[0] << ", " << FiveNumberSummary[1] << ", " << FiveNumberSummary[2] << ", "
-              << FiveNumberSummary[3] << ", " << FiveNumberSummary[4] << "\n\n";
+    std::cout << "Five number summery: " << fiveNumberSummary[0] << ", " << fiveNumberSummary[1] << ", " << fiveNumberSummary[2] << ", "
+              << fiveNumberSummary[3] << ", " << fiveNumberSummary[4] << "\n\n";
 
     std::cout   << std::setw(6)     << "speed"
                 << std::setw(15)    << "occurrences"
@@ -38,16 +39,16 @@ void PrintStats(std::string name, float average, std::vector<int> &Modes, std::v
                 << std::setw(22)    << "percent of total"
                 << "\n";
 
-    for(unsigned int i = 0;i < UniqueValues.size();i++){
+    for(unsigned int i = 0;i < mode.UniqueValues.size();i++){
         int total = 0;
-        for(unsigned int j = i;j < Modes.size();j++){
-            total+= Modes[j];
+        for(unsigned int j = i;j < mode.Values.size();j++){
+            total+= mode.Values[j];
         }
-        std::cout   << std::setw(6)     << UniqueValues[i]
-                    << std::setw(15)    << Modes[i]
+        std::cout   << std::setw(6)     << mode.UniqueValues[i]
+                    << std::setw(15)    << mode.Values[i]
                     << std::setw(13)    << total
                     << std::setw(13)    << int(total/total_total*1000)/10.f
-                    << std::setw(22)    << int(Modes[i]/total_total*1000)/10.f
+                    << std::setw(22)    << int(mode.Values[i]/total_total*1000)/10.f
                     << "\n";
     }
 }
@@ -94,36 +95,15 @@ void Reader() {
         }
 
         if(input.command == "download" || input.command == "downloads"){
-            std::vector<int> UniqueValuesDownload;
-            std::vector<int> ModesDownload;
-            GetModeDownload(UniqueValuesDownload, ModesDownload,data, input);
-            std::array<float,5> FiveNumberSummaryDownload = GetFiveNumberSummaryDownload(data, input);
-
-
-            PrintStats("Download", GetAverageDownload(data, input), ModesDownload, UniqueValuesDownload, FiveNumberSummaryDownload);
+            PrintStats("Download", data, input, 1, DATA_DOWNLOAD);
         }
 
         else if(input.command == "upload" || input.command == "uploads"){
-            std::vector<int> _UniqueValuesUpload;
-            std::vector<int> ModesUpload;
-            GetModeUpload(_UniqueValuesUpload, ModesUpload,data, input);
-            std::vector<float> UniqueValuesUpload;
-            for(unsigned int i = 0;i < _UniqueValuesUpload.size(); i++) UniqueValuesUpload.push_back(_UniqueValuesUpload[i]/10.f);
-            _UniqueValuesUpload.clear();
-            std::array<float,5> FiveNumberSummaryUpload = GetFiveNumberSummaryUpload(data, input);
-
-
-            PrintStats("Upload", GetAverageUpload(data, input), ModesUpload, UniqueValuesUpload, FiveNumberSummaryUpload);
+            PrintStats("Upload", data, input, 10, DATA_UPLOAD);
         }
 
         else if(input.command == "ping" || input.command == "pings"){
-            std::vector<int> UniqueValuesPing;
-            std::vector<int> ModesPing;
-            GetModePing(UniqueValuesPing, ModesPing,data, input);
-            std::array<float,5> FiveNumberSummaryPing = GetFiveNumberSummaryPing(data, input);
-
-
-            PrintStats("Ping", GetAveragePing(data, input), ModesPing, UniqueValuesPing, FiveNumberSummaryPing);
+            PrintStats("Ping", data, input, .1, DATA_PING);
         }
 
         else if(input.command == "time"){
