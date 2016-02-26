@@ -78,23 +78,12 @@ static void DoubleSort(std::vector<T> &SortFromAndTo, std::vector<T> &SortTo){
 //!----------------------------------------------------------------------------
 //-------------------averaging functions-------------------
 //!----------------------------------------------------------------------------
-static void _GetAverageDownload(NetworkData data, float &AverageDownload, int &Count) {
-    AverageDownload += data.Download;
-    Count++;
-}
-static void _GetAverageUpload(NetworkData data, float &AverageUpload, int &Count) {
-    AverageUpload += data.Upload;
-    Count++;
-}
-static void _GetAveragePing(NetworkData data, float &AveragePing, int &Count) {
-    AveragePing += data.Ping;
-    Count++;
-}
+
 
 float GetAverageDownload(const std::vector<NetworkData> &data, ParsedInput &input){
     float AverageDownload = 0;
     int Count = 0;
-    IterateThroughData(data, input, _GetAverageDownload, AverageDownload, Count);
+    IterateThroughData(data, input, [&](NetworkData _data){AverageDownload += _data.Download; Count++;});
     if(Count == 0) return -1;
     return AverageDownload/Count;
 }
@@ -102,7 +91,7 @@ float GetAverageDownload(const std::vector<NetworkData> &data, ParsedInput &inpu
 float GetAverageUpload(const std::vector<NetworkData> &data, ParsedInput &input){
     float AverageUpload = 0;
     int Count = 0;
-    IterateThroughData(data, input, _GetAverageUpload, AverageUpload, Count);
+    IterateThroughData(data, input, [&](NetworkData _data){AverageUpload += _data.Upload; Count++;});
     if(Count == 0) return -1;
     return AverageUpload/Count;
 }
@@ -111,10 +100,12 @@ float GetAverageUpload(const std::vector<NetworkData> &data, ParsedInput &input)
 float GetAveragePing(const std::vector<NetworkData> &data, ParsedInput &input){
     float AveragePing = 0;
     int Count = 0;
-    IterateThroughData(data, input, _GetAveragePing, AveragePing, Count);
+    IterateThroughData(data, input, [&](NetworkData _data){AveragePing += _data.Ping; Count++;});
     if(Count == 0) return -1;
     return AveragePing/Count;
 }
+
+#undef GetAverage
 
 
 //!----------------------------------------------------------------------------
@@ -209,17 +200,8 @@ void GetModePing(std::vector<int> &UniqueValuesPing, std::vector<int> &ModesPing
 //!----------------------------------------------------------------------------
 //-------------------five number summary-------------------
 //!----------------------------------------------------------------------------
-static void _CopyDownloads(NetworkData data, std::vector<float> &Downloads) {
-    Downloads.push_back(data.Download);
-}
-static void _CopyUploads(NetworkData data, std::vector<float> &Uploads) {
-    Uploads.push_back(data.Upload);
-}
-static void _CopyPings(NetworkData data, std::vector<float> &Pings) {
-    Pings.push_back(data.Ping);
-}
 
-static std::array<float,5> _HelperFiveNumberSummery(std::vector<float> &Speeds) {
+static std::array<float,5> GetFiveNumberSummery(std::vector<float> &Speeds) {
     std::array<float,5> FiveNumber;
     std::sort(Speeds.begin(),Speeds.end());
     if(Speeds.size() >= 5) {
@@ -239,18 +221,18 @@ static std::array<float,5> _HelperFiveNumberSummery(std::vector<float> &Speeds) 
 
 std::array<float,5> GetFiveNumberSummaryDownload(const std::vector<NetworkData> &data, ParsedInput &input){
     std::vector<float> Downloads;
-    IterateThroughData(data, input, _CopyDownloads, Downloads);
-    return _HelperFiveNumberSummery(Downloads);
+    IterateThroughData(data, input, [&](NetworkData data){Downloads.push_back(data.Download);});
+    return GetFiveNumberSummery(Downloads);
 }
 
 std::array<float,5> GetFiveNumberSummaryUpload(const std::vector<NetworkData> &data, ParsedInput &input){
     std::vector<float> Uploads;
-    IterateThroughData(data, input, _CopyUploads, Uploads);
-    return _HelperFiveNumberSummery(Uploads);
+    IterateThroughData(data, input, [&](NetworkData data){Uploads.push_back(data.Upload);});
+    return GetFiveNumberSummery(Uploads);
 }
 
 std::array<float,5> GetFiveNumberSummaryPing(const std::vector<NetworkData> &data, ParsedInput &input){
     std::vector<float> Pings;
-    IterateThroughData(data, input, _CopyPings, Pings);
-    return _HelperFiveNumberSummery(Pings);
+    IterateThroughData(data, input, [&](NetworkData data){Pings.push_back(data.Ping);});
+    return GetFiveNumberSummery(Pings);
 }
