@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1456367541 source:/user_data/CodeProjects/network_stats/main.cpp
+1456430173 source:/user_data/CodeProjects/network_stats/main.cpp
 	"ParsedInput.hpp"
 	"Enumerators.hpp"
 	"NetworkData.hpp"
@@ -14,23 +14,40 @@
 	<plplot/plplot.h>
 	<plplot/plstream.h>
 
-1456266337 /user_data/CodeProjects/network_stats/NetworkData.hpp
+1456431605 /user_data/CodeProjects/network_stats/NetworkData.hpp
 	"Enumerators.hpp"
 	"FindNumber.hpp"
 	<vector>
 	<fstream>
 
-1456274982 /user_data/CodeProjects/network_stats/HelperFunctions.hpp
+1456432747 /user_data/CodeProjects/network_stats/HelperFunctions.hpp
+	"NetworkData.hpp"
+	"ParsedInput.hpp"
 	<array>
 	<algorithm>
 
-1456266307 /user_data/CodeProjects/network_stats/Enumerators.hpp
+1456431537 /user_data/CodeProjects/network_stats/Enumerators.hpp
 	<iostream>
 
-1456273857 /user_data/CodeProjects/network_stats/ParsedInput.hpp
+1456431577 /user_data/CodeProjects/network_stats/ParsedInput.hpp
 	<vector>
 	"Enumerators.hpp"
 
-1456266273 /user_data/CodeProjects/network_stats/FindNumber.hpp
+1456431460 /user_data/CodeProjects/network_stats/FindNumber.hpp
 	<iostream>
+
+1456448212 source:/user_data/CodeProjects/network_stats/HelperFunctions.cpp
+	"HelperFunctions.hpp"
+
+1456431600 source:/user_data/CodeProjects/network_stats/NetworkData.cpp
+	"NetworkData.hpp"
+
+1456431563 source:/user_data/CodeProjects/network_stats/ParsedInput.cpp
+	"ParsedInput.hpp"
+
+1456431450 source:/user_data/CodeProjects/network_stats/FindNumber.cpp
+	"FindNumber.hpp"
+
+1456431542 source:/user_data/CodeProjects/network_stats/Enumerators.cpp
+	"Enumerators.hpp"
 

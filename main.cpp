@@ -82,7 +82,6 @@ void Reader() {
     GetErrors(could_not_find_errors,parsing_errors,data);
 
 
-
     char command[128];
     while(std::cin.getline(command,128)){
         ParsedInput input = ParseInput(command);
